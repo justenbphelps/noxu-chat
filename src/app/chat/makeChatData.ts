@@ -35,7 +35,11 @@ const newAccount = (id: number): Account => {
   return {
     id: faker.number.int({ max: 500 }),
     name: faker.company.name(),
-    industry: faker.lorem.word(),
+    industry: faker.string.alpha({
+      length: 2,
+      casing: "upper",
+      exclude: ["A"],
+    }),
     city: faker.location.city(),
     state: faker.location.state(),
     segment: faker.lorem.word(),
@@ -71,9 +75,9 @@ const newQuery = (id: number): Query => {
 };
 
 export function makeAccountsData(): Account[] {
-  return Array.from({ length: 10 }, (_, i) => newAccount(i));
+  return Array.from({ length: 5 }, (_, i) => newAccount(i));
 }
 
 export function makeQueriesData(): Query[] {
-  return Array.from({ length: 5 }, (_, i) => newQuery(i));
+  return Array.from({ length: 1 }, (_, i) => newQuery(i)); // increate length to show more queries
 }

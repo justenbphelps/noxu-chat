@@ -1,0 +1,13 @@
+.wrapper {
+  border: none;
+  border-right: 1px solid #e0e0e0;
+}
+
+.input {
+  border: none;
+}
+
+.buttonLabel {
+  margin: 0;
+  overflow: visible;
+}

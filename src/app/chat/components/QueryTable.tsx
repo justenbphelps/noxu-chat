@@ -1,126 +1,77 @@
-import { useMemo, useState } from "react";
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-  getPaginationRowModel,
-} from "@tanstack/react-table";
+import { useState } from "react";
 import { Account } from "../makeChatData";
+import { ActionIcon, Button, Table, Text } from "@mantine/core";
+import Image from "next/image";
 
 const QueryTable = ({ accounts }: { accounts: Account[] }) => {
   const [data, setData] = useState<Account[]>(accounts);
-  const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = useMemo<ColumnDef<Account>[]>(
-    () => [
-      {
-        header: "",
-        accessorKey: "id",
-        cell: (info) => info.getValue(),
-      },
-      {
-        header: "Name",
-        accessorKey: "name",
-        cell: (info) => info.getValue(),
-      },
-      {
-        header: "Industry",
-        accessorKey: "industry",
-        cell: (info) => info.getValue(),
-      },
-      {
-        header: "City",
-        accessorKey: "city",
-        cell: (info) => info.getValue(),
-      },
-      {
-        header: "State",
-        accessorKey: "state",
-        cell: (info) => info.getValue(),
-      },
-      {
-        header: "Segment",
-        accessorKey: "segment",
-        cell: (info) => info.getValue(),
-      },
-      {
-        header: "Owner ID",
-        accessorKey: "ownerId",
-        cell: (info) => info.getValue(),
-      },
-    ],
-    []
-  );
-  console.log(accounts);
-  const table = useReactTable({
-    columns,
-    data,
-    debugTable: true,
-    enableRowSelection: true,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-    },
-    getPaginationRowModel: getPaginationRowModel(),
-    rowCount: data.length,
+  const rows = data.map((element) => {
+    return (
+      <Table.Tr key={element.id}>
+        <Table.Td>{element.id}</Table.Td>
+        <Table.Td>{element.name}</Table.Td>
+        <Table.Td>{element.industry}</Table.Td>
+        <Table.Td className="w-4 max-w-20 truncate">{element.city}</Table.Td>
+        <Table.Td>{element.state}</Table.Td>
+        <Table.Td>{element.segment}</Table.Td>
+        <Table.Td>{element.ownerId}</Table.Td>
+      </Table.Tr>
+    );
   });
+
   return (
-    <div>
-      <table className="bg-white rounded-md">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  className="p-3 text-start border-b border-gray-200 text-gray-500 font-normal"
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="border-b border-gray-200">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="p-3">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
+    <div className="ml-12">
+      <Table className="bg-white border border-slate-300">
+        <Table.Thead className="border border-t border-x border-slate-300">
+          <Table.Tr className="text-md text-gray-400">
+            <Table.Th />
+            <Table.Th>Name</Table.Th>
+            <Table.Th>Industry</Table.Th>
+            <Table.Th>City</Table.Th>
+            <Table.Th>State</Table.Th>
+            <Table.Th>Segment</Table.Th>
+            <Table.Th>Owner Id</Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody className="border-x border-slate-300">{rows}</Table.Tbody>
+      </Table>
+      <div className="flex gap-2 justify-between items-center w-full p-2 bg-[#f7f9fb] border-t border-l border-r border-slate-300">
+        <div className="flex gap-2 justify-between items-center text-slate-600">
+          <Image
+            src="/assets/info.svg"
+            alt="alert-circle"
+            width={20}
+            height={20}
+          />
+          <Text fw={500}>Only X rows are shown. View full list for more</Text>
+        </div>
+        <ActionIcon size="xs" variant="transparent" color="gray">
+          <Image src="/assets/x.svg" alt="arrow-right" width={20} height={20} />
+        </ActionIcon>
+      </div>
+      <div className="w-full bg-white flex items-center gap-4 p-4 border border-slate-300 rounded-b-lg">
+        <Button variant="outline" color="lightgray">
+          <Text c="black" size="sm">
+            Show Full List
+          </Text>
+        </Button>
+        <Button variant="outline" color="lightgray">
+          <Text c="black" size="sm">
+            Show Query
+          </Text>
+        </Button>
+        <Button variant="outline" color="lightgray">
+          <Text c="black" size="sm">
+            Show Chart
+          </Text>
+        </Button>
+        <Button variant="outline" color="lightgray">
+          <Text c="black" size="sm">
+            Pin to Dashboard
+          </Text>
+        </Button>
+      </div>
     </div>
   );
 };
